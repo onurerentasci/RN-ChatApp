@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-native-paper";
@@ -18,6 +18,13 @@ const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 const TabsNavigator = () => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    const isLoggedIn = false;
+    if (!isLoggedIn) {
+      navigation.navigate("Signup");
+    }
+  }, []);
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
@@ -49,8 +56,16 @@ const App = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="Chat" component={Chat} />
-          <Stack.Screen name="Signin" component={Signin} />
-          <Stack.Screen name="Signup" component={SignUp} />
+          <Stack.Screen
+            name="Signin"
+            component={Signin}
+            options={{ presentation: "fullScreenModal" }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignUp}
+            options={{ presentation: "fullScreenModal" }}
+          />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
