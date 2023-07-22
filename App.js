@@ -3,6 +3,7 @@ import { Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
+import { Provider } from "react-native-paper";
 
 import ChatList from "./screens/ChatList";
 import Chat from "./screens/Chat";
@@ -40,16 +41,18 @@ const TabsNavigator = () => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={TabsNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Chat" component={Chat}/>
-        <Stack.Screen name="Signin" component={Signin}/>
-        <Stack.Screen name="Signup" component={SignUp}/>
-      </Stack.Navigator>
+      <Provider>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={TabsNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Chat" component={Chat} />
+          <Stack.Screen name="Signin" component={Signin} />
+          <Stack.Screen name="Signup" component={SignUp} />
+        </Stack.Navigator>
+      </Provider>
     </NavigationContainer>
   );
 };
