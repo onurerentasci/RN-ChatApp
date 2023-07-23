@@ -3,7 +3,7 @@ import { Text } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-import { Provider } from "react-native-paper";
+import { Provider, DefaultTheme } from "react-native-paper";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -33,13 +33,14 @@ const TabsNavigator = () => {
       }
     });
   }, []);
+
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           return (
             <Ionicons
-              name={route.name === "chatList" ? "chatbubbles" : "settings"}
+              name={route.name === "ChatList" ? "chatbubbles" : "settings"}
               color={color}
               size={size}
             />
@@ -47,31 +48,41 @@ const TabsNavigator = () => {
         },
       })}
     >
-      <Tabs.Screen name="chatList" component={ChatList} />
-      <Tabs.Screen name="settings" component={Settings} />
+      <Tabs.Screen name="ChatList" component={ChatList} />
+      <Tabs.Screen name="Settings" component={Settings} />
     </Tabs.Navigator>
   );
+};
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#2196f3",
+    accent: "#e91e63",
+  },
 };
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Provider>
+      <Provider theme={theme}>
         <Stack.Navigator>
           <Stack.Screen
-            name="Home"
+            name="Main"
             component={TabsNavigator}
             options={{ headerShown: false }}
           />
           <Stack.Screen name="Chat" component={Chat} />
           <Stack.Screen
-            name="Signin"
-            component={Signin}
+            name="SignUp"
+            component={SignUp}
             options={{ presentation: "fullScreenModal" }}
           />
           <Stack.Screen
-            name="SignUp"
-            component={SignUp}
+            name="SignIn"
+            component={Signin}
             options={{ presentation: "fullScreenModal" }}
           />
         </Stack.Navigator>
@@ -79,5 +90,4 @@ const App = () => {
     </NavigationContainer>
   );
 };
-
 export default App;

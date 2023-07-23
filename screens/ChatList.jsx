@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import {
   List,
   Avatar,
@@ -32,26 +32,52 @@ const ChatList = () => {
   const createChat = async () => {
     if (!email || !userEmail) return;
     setIsLoading(true);
-    await firebase
+    const response = await firebase
       .firestore()
       .collection("chats")
       .add({
         users: [email, userEmail],
       });
-
     setIsLoading(false);
     setIsDialogVisible(false);
-    navigation.navigate("Chat");
+    navigation.navigate("Chat", { chatId: response.id });
   };
+
+  const [chats, setChats] = useState([]);
+  useEffect(() => {
+    return firebase
+      .firestore()
+      .collection("chats")
+      .where("users", "array-contains", email)
+      .onSnapshot((querySnapshot) => {
+        setChats(querySnapshot.docs);
+      });
+  }, [email]);
 
   return (
     <View style={{ flex: 1 }}>
-      <List.Item
-        title="username"
-        description="last message"
-        left={() => <Avatar.Text label="UN" size={56} />}
-      />
-      <Divider />
+      {chats.map((chat) => (
+        <React.Fragment>
+          <List.Item
+            style={{ padding: 16 }}
+            title={chat.data().users.find((x) => x !== email)}
+            description={(chat.data().messages ?? [])[0]?.text ?? undefined}
+            left={() => (
+              <Avatar.Text
+                label={chat
+                  .data()
+                  .users.find((x) => x !== email)
+                  .split(" ")
+                  .reduce((prev, current) => prev + current[0], "")}
+                size={56}
+              />
+            )}
+            onPress={() => navigation.navigate("Chat", { chatId: chat.id })}
+          />
+          <Divider />
+        </React.Fragment>
+      ))}
+
       <Portal>
         <Dialog
           visible={isDialogVisible}
@@ -68,11 +94,12 @@ const ChatList = () => {
           <Dialog.Actions>
             <Button onPress={() => setIsDialogVisible(false)}>Cancel</Button>
             <Button onPress={() => createChat()} loading={isLoading}>
-              Chat
+              Save
             </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
+
       <FAB
         icon="plus"
         style={{ position: "absolute", bottom: 16, right: 16 }}
