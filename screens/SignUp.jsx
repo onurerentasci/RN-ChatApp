@@ -33,7 +33,7 @@ const SignUp = () => {
     <View style={{ margin: 16 }}>
       {!!error && (
         <Subheading
-          style={{ color: "#6750a4", textAlign: "center", marginBottom: 16 }}
+          style={{ color: "#73c6d8", textAlign: "center", marginBottom: 16 }}
         >
           {error}
         </Subheading>
@@ -64,7 +64,7 @@ const SignUp = () => {
           marginTop: 16,
         }}
       >
-        <Button compact={true} onPress={() => navigation.navigate("Signin")}>
+        <Button compact={true} onPress={() => navigation.navigate("SignIn")}>
           Sign In
         </Button>
         <Button

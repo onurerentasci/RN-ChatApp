@@ -19,9 +19,7 @@ import Settings from "./screens/Settings";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 firebase.initializeApp(firebaseConfig);
-
 const Stack = createNativeStackNavigator();
-
 const Tabs = createBottomTabNavigator();
 
 const TabsNavigator = () => {
@@ -37,37 +35,38 @@ const TabsNavigator = () => {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
+        tabBarOption: {
+          showLabel: false,
+        },
         tabBarIcon: ({ focused, color, size }) => {
           return (
             <Ionicons
               name={route.name === "ChatList" ? "chatbubbles" : "settings"}
-              color={color}
+              color="#6750a4"
               size={size}
             />
           );
         },
       })}
     >
-      <Tabs.Screen name="ChatList" component={ChatList} />
-      <Tabs.Screen name="Settings" component={Settings} />
+      <Tabs.Screen
+        name="ChatList"
+        component={ChatList}
+        options={{ headerTitle: "Chats", tabBarActiveTintColor: "#6750a4" }}
+      />
+      <Tabs.Screen
+        name="Settings"
+        component={Settings}
+        options={{ headerTitle: "Settings", tabBarActiveTintColor: "#6750a4" }}
+      />
     </Tabs.Navigator>
   );
-};
-
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: "#2196f3",
-    accent: "#e91e63",
-  },
 };
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Provider theme={theme}>
+      <Provider>
         <Stack.Navigator>
           <Stack.Screen
             name="Main"
@@ -78,12 +77,18 @@ const App = () => {
           <Stack.Screen
             name="SignUp"
             component={SignUp}
-            options={{ presentation: "fullScreenModal" }}
+            options={{
+              presentation: "fullScreenModal",
+              headerTitle: "Sign Up",
+            }}
           />
           <Stack.Screen
             name="SignIn"
             component={Signin}
-            options={{ presentation: "fullScreenModal" }}
+            options={{
+              presentation: "fullScreenModal",
+              headerTitle: "Sign In",
+            }}
           />
         </Stack.Navigator>
       </Provider>
