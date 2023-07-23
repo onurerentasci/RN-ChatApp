@@ -5,6 +5,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-native-paper";
 
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import { firebaseConfig } from "./firebaseConfig";
+
 import ChatList from "./screens/ChatList";
 import Chat from "./screens/Chat";
 import SignUp from "./screens/SignUp";
@@ -13,6 +18,8 @@ import Settings from "./screens/Settings";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+firebase.initializeApp(firebaseConfig);
+
 const Stack = createNativeStackNavigator();
 
 const Tabs = createBottomTabNavigator();
@@ -20,10 +27,11 @@ const Tabs = createBottomTabNavigator();
 const TabsNavigator = () => {
   const navigation = useNavigation();
   useEffect(() => {
-    const isLoggedIn = false;
-    if (!isLoggedIn) {
-      navigation.navigate("Signup");
-    }
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        navigation.navigate("SignUp");
+      }
+    });
   }, []);
   return (
     <Tabs.Navigator
@@ -62,7 +70,7 @@ const App = () => {
             options={{ presentation: "fullScreenModal" }}
           />
           <Stack.Screen
-            name="Signup"
+            name="SignUp"
             component={SignUp}
             options={{ presentation: "fullScreenModal" }}
           />
